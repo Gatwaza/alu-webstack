@@ -32,12 +32,13 @@ defaults
         errorfile 503 /etc/haproxy/errors/503.http
         errorfile 504 /etc/haproxy/errors/504.http
 frontend haproxynode
-        bind *:80
-        bind *:443 ssl crt /etc/ssl/certs/www.gatwaza.tech.pem
-        redirect scheme https code 301 if !{ ssl_fc }
-        default_backend backendnodes
+         bind *:80
+         bind *:443 ssl crt /etc/letsencrypt/live/www.gatwaza.tech/all.pem
+         redirect scheme https code 301 if !{ ssl_fc }
+         default_backend backendnodes
 
-backend webserver
-    balance roundrobin
-    server 4969-web-01 100.26.107.219:80 check
-    server 4969-web-02 107.22.56.230:80 check
+backend backendnodes
+        balance roundrobin
+        option forwardfor
+        server 4969-web-01 100.26.107.219:80 check
+        server 4969-web-02 107.22.56.230:80 checkk
